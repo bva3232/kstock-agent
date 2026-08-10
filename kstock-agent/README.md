@@ -15,6 +15,9 @@ cp config.example.yaml config.yaml
 `config.yaml` 에 DART API 키를 넣습니다. 키는 https://opendart.fss.or.kr 에서 무료 발급되고,
 발급 즉시 쓸 수 있습니다. (환경변수 `DART_API_KEY` 로도 됩니다.)
 
+리포트를 텔레그램으로도 받고 싶다면 `config.yaml` 의 `telegram.bot_token`/`chat_id` 를 채우세요.
+발급 방법은 [QUICKSTART.md](QUICKSTART.md#6-텔레그램-발송-설정-선택) 참고. 비워두면 발송 없이 콘솔 출력만 됩니다.
+
 ## 2. 실행 — 하루 2회 사이클
 
 ```bash
@@ -42,7 +45,13 @@ python run_backtest.py --days 400 --null-check 20   # 신호 검증
 python run_morning_brief.py                     # HTML 브리핑 리포트
 ```
 
-### 자동 실행 (cron)
+### 자동 실행
+
+**PC가 꺼져 있어도 돌아가야 하면** 로컬 crontab 대신 클로드 클라우드 스케줄(`/schedule`)을 씁니다.
+매일 07:30 `run_premarket.py`, 15:40 `run_evening.py` 를 클라우드에서 실행하도록 등록하면
+사용자 PC 상태와 무관하게 실행되고, 끝나면 텔레그램으로 리포트가 옵니다.
+
+직접 보유한 서버/PC를 상시 켜두고 쓰는 경우엔 기존 crontab 방식도 가능합니다.
 
 ```bash
 crontab -e

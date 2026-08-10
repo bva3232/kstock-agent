@@ -9,6 +9,7 @@ import yaml
 
 DEFAULTS: dict[str, Any] = {
     "dart": {"api_key": ""},
+    "telegram": {"bot_token": "", "chat_id": ""},
     "account": {
         "seed_krw": 1_000_000,
         "max_positions": 4,
@@ -54,6 +55,12 @@ class Config:
         env_key = os.getenv("DART_API_KEY")
         if env_key:
             data["dart"]["api_key"] = env_key
+        tg_token = os.getenv("TELEGRAM_BOT_TOKEN")
+        if tg_token:
+            data["telegram"]["bot_token"] = tg_token
+        tg_chat = os.getenv("TELEGRAM_CHAT_ID")
+        if tg_chat:
+            data["telegram"]["chat_id"] = tg_chat
         return cls(data)
 
     def __getitem__(self, key: str):
@@ -70,3 +77,11 @@ class Config:
     @property
     def dart_key(self) -> str:
         return self._d["dart"]["api_key"]
+
+    @property
+    def telegram_bot_token(self) -> str:
+        return self._d["telegram"]["bot_token"]
+
+    @property
+    def telegram_chat_id(self) -> str:
+        return self._d["telegram"]["chat_id"]

@@ -48,7 +48,32 @@ python run_evening.py       # 내일 장 마감 후 → 첫 채점 결과가 나
 python run_evening.py --skip-p1     # 핵심 2종목만
 ```
 
-## 6. 자동화
+## 6. 텔레그램 발송 설정 (선택)
+
+1. 텔레그램에서 **@BotFather** 검색 → `/newbot` 입력 → 안내대로 봇 이름 설정 → 발급된 토큰 복사
+2. 만든 봇을 검색해 대화창을 열고 아무 메시지나 전송 (채팅을 시작해야 chat_id 가 생김)
+3. 브라우저로 `https://api.telegram.org/bot<토큰>/getUpdates` 접속 → 응답에서 `"chat":{"id": ... }` 값 확인
+4. `config.yaml` 에 채워넣기 (또는 환경변수 `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` 로 대체 가능):
+
+```yaml
+telegram:
+  bot_token: "123456:AAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  chat_id: "987654321"
+```
+
+이후 `run_evening.py`/`run_premarket.py` 를 실행하면 콘솔에 찍히는 리포트가 그대로 텔레그램으로도 전송됩니다.
+(발송을 끄고 싶으면 `--no-telegram` 옵션)
+
+## 7. 자동화
+
+**PC를 꺼놔도 실행되게 하려면 클로드 클라우드 스케줄(`/schedule`)을 쓰세요.** 로컬 crontab은 PC/서버가 켜져 있어야만 동작합니다.
+
+```
+/schedule 매일 07:30 kstock-agent/run_premarket.py 실행
+/schedule 매일 15:40 kstock-agent/run_evening.py 실행
+```
+
+로컬 PC나 직접 보유한 서버에서 계속 실행하고 싶다면 기존 crontab 방식도 가능합니다.
 
 ```bash
 mkdir -p logs

@@ -4,6 +4,14 @@ dart:
   # https://opendart.fss.or.kr 에서 무료 발급 (분당 호출 제한 있음)
   api_key: "여기에_DART_API_KEY"
 
+telegram:
+  # 텔레그램으로 리포트 자동 발송 (둘 다 비우면 발송 건너뜀)
+  # 1) @BotFather 에게 /newbot 으로 봇 생성 → 토큰 발급
+  # 2) 만든 봇과 대화 시작(아무 메시지나 전송) 후
+  #    https://api.telegram.org/bot<토큰>/getUpdates 접속해 chat.id 확인
+  bot_token: ""    # 또는 환경변수 TELEGRAM_BOT_TOKEN
+  chat_id: ""      # 또는 환경변수 TELEGRAM_CHAT_ID
+
 account:
   seed_krw: 1000000          # 시드머니
   max_positions: 4           # 최대 동시 보유 종목수

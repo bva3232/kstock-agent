@@ -13,13 +13,14 @@
 from __future__ import annotations
 
 import argparse
+import io
 import sys
 from datetime import date, timedelta
 
 import pandas as pd
 from pykrx import stock
 
-from kagent import disclosure, forecast, screener, signals
+from kagent import disclosure, forecast, screener, signals, telegram
 from kagent.config import Config
 from kagent.dart import DartError, get_dart
 from kagent.krx import KrxData, recent_trading_days
@@ -53,9 +54,24 @@ def main() -> int:
     ap.add_argument("--core", nargs="*", default=None, help="프로세스2 핵심 종목코드")
     ap.add_argument("--no-dart", action="store_true")
     ap.add_argument("--skip-p1", action="store_true", help="스크리닝 건너뛰기 (빠른 실행)")
+    ap.add_argument("--no-telegram", action="store_true", help="텔레그램 발송 건너뛰기")
     args = ap.parse_args()
 
     cfg = Config.load(args.config)
+    real_stdout = sys.stdout
+    buf = io.StringIO()
+    sys.stdout = telegram.TeeStdout(buf, real_stdout)
+    try:
+        rc = _run(args, cfg)
+    finally:
+        sys.stdout = real_stdout
+    if not args.no_telegram:
+        title = f"[마감 리포트] {date.today().strftime('%Y-%m-%d')}"
+        telegram.send_message(cfg, buf.getvalue(), title=title)
+    return rc
+
+
+def _run(args, cfg) -> int:
     krx = KrxData(cfg.cache_dir)
     led = Ledger(cfg.cache_dir / "predictions.db")
     core = args.core if args.core is not None else cfg["account"].get("core_tickers", CORE_DEFAULT)
