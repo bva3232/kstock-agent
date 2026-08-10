@@ -1,9 +1,9 @@
 # 개인 설정 (API 키 포함) — 절대 커밋 금지
 config.yaml
 
-# 캐시 및 산출물
-.cache/
-reports/
+# 캐시 및 산출물 (예측 원장은 클라우드 자동 실행 간 상태 유지를 위해 추적함)
+.cache/*
+!.cache/predictions.db
 logs/
 *.log
 
