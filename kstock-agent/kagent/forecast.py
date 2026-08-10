@@ -224,7 +224,7 @@ def format_one(fc: dict) -> str:
     if gap is not None:
         L.append(f"   갭 {gap:+.2f}% 반영 → 시가 기준선 {fc['anchor']:,.0f}원")
     L.append("")
-    L.append(f"   ▲ 오르는 경우  보통 {fc["up_price"]:,.0f}원 ({fc["up_pct"]:+.1f}%)"
+    L.append(f"   ▲ 오르는 경우  보통 {fc['up_price']:,.0f}원 ({fc['up_pct']:+.1f}%)"
              f"   상위10% {fc['up_stretch_price']:,.0f}원 ({fc['up_stretch_pct']:+.1f}%)")
     L.append(f"   ▼ 빠지는 경우  보통 {fc['down_price']:,.0f}원 ({fc['down_pct']:+.1f}%)"
              f"   하위10% {fc['down_stretch_price']:,.0f}원 ({fc['down_stretch_pct']:+.1f}%)")
