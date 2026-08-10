@@ -15,7 +15,11 @@ class TeeStdout(io.TextIOBase):
         self._console = console or sys.__stdout__
 
     def write(self, s: str) -> int:
-        self._console.write(s)
+        try:
+            self._console.write(s)
+        except UnicodeEncodeError:
+            enc = getattr(self._console, "encoding", None) or "utf-8"
+            self._console.write(s.encode(enc, errors="replace").decode(enc, errors="replace"))
         self._buffer.write(s)
         return len(s)
 
