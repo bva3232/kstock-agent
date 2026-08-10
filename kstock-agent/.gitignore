@@ -1,0 +1,14 @@
+# 개인 설정 (API 키 포함) — 절대 커밋 금지
+config.yaml
+
+# 캐시 및 산출물
+.cache/
+reports/
+logs/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/

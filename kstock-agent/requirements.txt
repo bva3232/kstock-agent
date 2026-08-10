@@ -1,0 +1,11 @@
+pykrx>=1.0.45
+pandas>=2.0
+numpy>=1.24
+requests>=2.31
+PyYAML>=6.0
+lxml>=4.9
+jinja2>=3.1
+beautifulsoup4>=4.12   # DART API 키 없을 때 웹크롤러(kagent.dart_crawl)가 사용
+
+# 선택 — 간밤 미국장(SOX/MU/NVDA) 연동. 없어도 나머지는 정상 동작합니다.
+yfinance>=0.2.40
