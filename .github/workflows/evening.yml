@@ -1,0 +1,55 @@
+name: Evening Report
+
+on:
+  schedule:
+    - cron: "40 6 * * 1-5"   # 15:40 KST Mon-Fri (UTC = KST-9)
+  workflow_dispatch:
+    inputs:
+      no_telegram:
+        description: "텔레그램 발송 건너뛰기 (테스트용)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kstock-ledger
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: kstock-agent
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: kstock-agent/requirements.txt
+
+      - run: pip install -r requirements.txt
+
+      - name: Run evening report
+        env:
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          ARGS=""
+          if [ "${{ inputs.no_telegram }}" = "true" ]; then ARGS="--no-telegram"; fi
+          python run_evening.py $ARGS
+
+      - name: Persist predictions ledger
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .cache/predictions.db
+          if ! git diff --cached --quiet; then
+            git commit -m "Update predictions ledger (evening $(date -u +%F))"
+            git pull --rebase origin main
+            git push
+          fi
