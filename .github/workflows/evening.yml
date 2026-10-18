@@ -16,6 +16,9 @@ permissions:
 concurrency:
   group: kstock-ledger
 
+env:
+  TZ: Asia/Seoul   # date.today() in the scripts must match KST trading dates, not UTC
+
 jobs:
   run:
     runs-on: ubuntu-latest
